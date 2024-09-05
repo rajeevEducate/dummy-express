@@ -4,6 +4,12 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = express();
 const PORT = 8000;
 
@@ -47,7 +53,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
     }
 
     // File information is available in req.file
-    const filePath = path.join(process.cwd(), 'uploads', req.file.originalname);
+    const filePath = path.join(__dirname, 'uploads', req.file.originalname);
 
     // Read the file to confirm upload success (optional)
     fs.readFile(filePath, (err, data) => {
