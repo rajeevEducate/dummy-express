@@ -22,7 +22,7 @@ app.use(express.urlencoded({
 // Set up Multer storage configuration
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const dir = './uploads/';
+        const dir = '/mnt/temp-storage/uploads/';
         
         // Ensure that the 'uploads' directory exists
         if (!fs.existsSync(dir)){
@@ -47,19 +47,21 @@ app.get("/", (req,res) => {
 })
 
 app.post('/upload', upload.single('file'), (req, res) => {
+
     // Multer will automatically attach the file to req.file
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
     }
 
     // File information is available in req.file
-    const filePath = path.join(__dirname, 'uploads', req.file.originalname);
+    const filePath = path.join("/mnt/temp-storage", 'uploads', req.file.originalname);
 
     // Read the file to confirm upload success (optional)
     fs.readFile(filePath, (err, data) => {
         if (err) {
             return res.status(500).send('Error reading the file.');
         }
+
         // Sending success response
         res.status(200).send({
             message: 'File uploaded successfully',
